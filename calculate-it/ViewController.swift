@@ -70,7 +70,8 @@ class ViewController: UIViewController {
         if currentOperation != Operation.Empty {
             
             //If runningNumber is blank, user has clicked an operator and then 
-            //clicked another operator
+            //clicked another operator so do not attempt calculation
+            
             if runningNumber != "" {
                 
                 //Do math
@@ -81,13 +82,7 @@ class ViewController: UIViewController {
                 let exp: NSExpression = NSExpression(format: mathString)
                 result = exp.expressionValueWithObject(nil, context: nil) as! Double
                 
-                //Chop off the .0 if it's a whole number (for the heck of it)
-                if String(result).hasSuffix(".0") {
-                    let intResult = String(result).componentsSeparatedByString(".")[0]
-                    outputLbl.text = String(intResult)
-                } else {
-                    outputLbl.text = String(result)
-                }
+                updateOutput(result)
                 
                 leftNumber = String(result)
                 rightNumber = ""                
@@ -120,6 +115,17 @@ class ViewController: UIViewController {
     
     @IBAction func onEqualPressed(sender: UIButton) {
         processOperation(currentOperation)
+    }
+    
+    func updateOutput(calculation: Double){
+        var endResult = String(calculation)
+        
+        //Chop off the .0 if it's a whole number (for the heck of it)
+        if endResult.hasSuffix(".0") {
+            endResult = endResult.componentsSeparatedByString(".")[0]
+        }
+        
+        outputLbl.text = String(endResult)
     }
     
     func playSound() {
